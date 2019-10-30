@@ -1,4 +1,6 @@
 #include <QApplication>
+#include <QFileDialog>
+#include <QDebug>
 
 #include "mainwindow.h"
 
@@ -70,5 +72,39 @@ void MainWindow::createActions()
 
     connect(exitAction, SIGNAL(triggered(bool)),
 	    QApplication::instance(), SLOT(quit()));
+    connect(openAction, SIGNAL(triggered(bool)),
+	    this, SLOT(openImage()));
 
+}
+
+void MainWindow::openImage()
+{
+  QFileDialog dialog(this);
+  dialog.setWindowTitle("Open Image");
+  dialog.setFileMode(QFileDialog::ExistingFile);
+  dialog.setNameFilter(tr("Images (*.png *.bmp *.jpg)"));
+
+  QStringList filePaths;
+
+  if (dialog.exec()) {
+    filePaths = dialog.selectedFiles();
+    showImage(filePaths.at(0));
+  }
+}
+
+void MainWindow::showImage(QString path)
+{
+  imageScene->clear();
+  imageView->resetMatrix();
+
+  QPixmap image(path);
+  imageScene->addPixmap(image);
+  imageScene->update();
+  imageView->setSceneRect(image.rect());
+
+  QString status = QString("%1, %2x%3, %4 Bytes")
+    .arg(path).arg(image.width())
+    .arg(image.height()).arg(QFile(path).size());
+
+  mainStatusLabel->setText(status);
 }

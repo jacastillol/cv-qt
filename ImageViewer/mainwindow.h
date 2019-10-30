@@ -16,10 +16,14 @@ class MainWindow : public QMainWindow
 public:
   explicit MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
+
+private slots:
+  void openImage();
  
 private:
   void initUI();
   void createActions();
+  void showImage(QString);
  
 private:
   QMenu *fileMenu;
