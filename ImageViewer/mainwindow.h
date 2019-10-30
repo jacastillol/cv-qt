@@ -35,6 +35,13 @@ private:
   QLabel *mainStatusLabel;
 
   QAction *openAction;
+  QAction *saveAsAction;
+  QAction *exitAction;
+  QAction *zoomInAction;
+  QAction *zoomOutAction;
+  QAction *prevAction;
+  QAction *nextAction;
+  
 };
 
 #endif // MAINWINDOW_H

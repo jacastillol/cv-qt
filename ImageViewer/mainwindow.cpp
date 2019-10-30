@@ -45,8 +45,25 @@ void MainWindow::createActions()
     // create actions, add them to menus
     openAction = new QAction("&Open", this);
     fileMenu->addAction(openAction);
+    saveAsAction = new QAction("&Save as", this);
+    fileMenu->addAction(saveAsAction);
+    exitAction = new QAction("E&xit", this);
+    fileMenu->addAction(exitAction);
+
+    zoomInAction = new QAction("Zoom in", this);
+    viewMenu->addAction(zoomInAction);
+    zoomOutAction = new QAction("Zoom Out", this);
+    viewMenu->addAction(zoomOutAction);
+    prevAction = new QAction("&Previous Image", this);
+    viewMenu->addAction(prevAction);
+    nextAction = new QAction("&Next Image", this);
+    viewMenu->addAction(nextAction);
 
     // add actions to toolbars
     fileToolBar->addAction(openAction);
+    viewToolBar->addAction(zoomInAction);
+    viewToolBar->addAction(zoomOutAction);
+    viewToolBar->addAction(prevAction);
+    viewToolBar->addAction(nextAction);
 
 }
