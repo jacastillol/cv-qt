@@ -6,3 +6,5 @@ Makefile
 .qmake.stash
 
 *~
+*.o
+moc_*.*
