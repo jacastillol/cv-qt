@@ -1,3 +1,5 @@
+#include <QApplication>
+
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -65,5 +67,8 @@ void MainWindow::createActions()
     viewToolBar->addAction(zoomOutAction);
     viewToolBar->addAction(prevAction);
     viewToolBar->addAction(nextAction);
+
+    connect(exitAction, SIGNAL(triggered(bool)),
+	    QApplication::instance(), SLOT(quit()));
 
 }
