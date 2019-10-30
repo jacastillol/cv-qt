@@ -29,9 +29,24 @@ void MainWindow::initUI()
   mainStatusLabel = new QLabel(mainStatusBar);
   mainStatusBar->addPermanentWidget(mainStatusLabel);
   mainStatusLabel->setText("Image Information will be here!");
+
+  createActions();
+  
 }
 
 MainWindow::~MainWindow()
 {
   
+}
+
+void MainWindow::createActions()
+{
+
+    // create actions, add them to menus
+    openAction = new QAction("&Open", this);
+    fileMenu->addAction(openAction);
+
+    // add actions to toolbars
+    fileToolBar->addAction(openAction);
+
 }

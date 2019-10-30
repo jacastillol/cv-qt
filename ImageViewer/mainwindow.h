@@ -19,6 +19,7 @@ public:
  
 private:
   void initUI();
+  void createActions();
  
 private:
   QMenu *fileMenu;
@@ -32,6 +33,8 @@ private:
  
   QStatusBar *mainStatusBar;
   QLabel *mainStatusLabel;
+
+  QAction *openAction;
 };
 
 #endif // MAINWINDOW_H
