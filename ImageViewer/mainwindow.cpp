@@ -39,8 +39,6 @@ void MainWindow::initUI()
 
   createActions();
 
-  setupShortcuts();
-  
 }
 
 MainWindow::~MainWindow()
@@ -87,7 +85,11 @@ void MainWindow::createActions()
 	    this, SLOT(saveAs()));
     connect(prevAction, SIGNAL(triggered(bool)),
 	    this, SLOT(prevImage()));
+    connect(nextAction, SIGNAL(triggered(bool)),
+	    this, SLOT(nextImage()));
 
+    setupShortcuts();
+  
 }
 
 void MainWindow::openImage()
@@ -131,7 +133,7 @@ void MainWindow::zoomIn()
 
 void MainWindow::zoomOut()
 {
-  imageView->scale(0.8, 0.8);
+  imageView->scale(1.0/1.2, 1.0/1.2);
 }
 
 void MainWindow::saveAs()
@@ -180,6 +182,30 @@ void MainWindow::prevImage()
 			     this,
 			     "Information",
 			     "Current image is the first one.");
+  }
+}
+
+void MainWindow::nextImage()
+{
+  QFileInfo current(currentImagePath);
+  QDir dir = current.absoluteDir();
+
+  QStringList nameFilters;
+  nameFilters << "*.png" << "*.bmp" << "*.jpg";
+
+  QStringList fileNames = dir.entryList(
+					nameFilters,
+					QDir::Files,
+					QDir::Name);
+
+  int idx = fileNames.indexOf(QRegExp(QRegExp::escape(current.fileName())));
+  if(idx < fileNames.size() - 1) {
+    showImage(dir.absoluteFilePath(fileNames.at(idx + 1)));
+  } else {
+    QMessageBox::information(
+			     this,
+			     "Information",
+			     "Current image is the last one.");
   }
 }
 

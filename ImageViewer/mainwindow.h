@@ -24,6 +24,7 @@ private slots:
   void zoomOut();
   void saveAs();
   void prevImage();
+  void nextImage();
  
 private:
   void initUI();
