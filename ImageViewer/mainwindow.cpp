@@ -38,6 +38,8 @@ void MainWindow::initUI()
   mainStatusLabel->setText("Image Information will be here!");
 
   createActions();
+
+  setupShortcuts();
   
 }
 
@@ -179,4 +181,23 @@ void MainWindow::prevImage()
 			     "Information",
 			     "Current image is the first one.");
   }
+}
+
+void MainWindow::setupShortcuts()
+{
+  QList<QKeySequence>shortcuts;
+  shortcuts <<Qt::Key_Plus <<Qt::Key_Equal;
+  zoomInAction->setShortcuts(shortcuts);
+ 
+  shortcuts.clear();
+  shortcuts <<Qt::Key_Minus <<Qt::Key_Underscore;
+  zoomOutAction->setShortcuts(shortcuts);
+ 
+  shortcuts.clear();
+  shortcuts <<Qt::Key_Up <<Qt::Key_Left;
+  prevAction->setShortcuts(shortcuts);
+ 
+  shortcuts.clear();
+  shortcuts <<Qt::Key_Down <<Qt::Key_Right;
+  nextAction->setShortcuts(shortcuts);
 }
