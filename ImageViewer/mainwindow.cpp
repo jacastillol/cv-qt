@@ -1,13 +1,16 @@
 #include <QApplication>
 #include <QFileDialog>
 #include <QDebug>
+#include <QPixmap>
+#include <QMessageBox>
 
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent),
     fileMenu(nullptr),
-    viewMenu(nullptr)
+    viewMenu(nullptr),
+    currentImage(nullptr)
 {
   initUI();
 }
@@ -74,6 +77,12 @@ void MainWindow::createActions()
 	    QApplication::instance(), SLOT(quit()));
     connect(openAction, SIGNAL(triggered(bool)),
 	    this, SLOT(openImage()));
+    connect(zoomInAction, SIGNAL(triggered(bool)),
+	    this, SLOT(zoomIn()));
+    connect(zoomOutAction, SIGNAL(triggered(bool)),
+	    this, SLOT(zoomOut()));
+    connect(saveAsAction, SIGNAL(triggered(bool)),
+	    this, SLOT(saveAs()));
 
 }
 
@@ -98,7 +107,7 @@ void MainWindow::showImage(QString path)
   imageView->resetMatrix();
 
   QPixmap image(path);
-  imageScene->addPixmap(image);
+  currentImage = imageScene->addPixmap(image);
   imageScene->update();
   imageView->setSceneRect(image.rect());
 
@@ -107,4 +116,41 @@ void MainWindow::showImage(QString path)
     .arg(image.height()).arg(QFile(path).size());
 
   mainStatusLabel->setText(status);
+}
+
+void MainWindow::zoomIn()
+{
+  imageView->scale(1.2, 1.2);
+}
+
+void MainWindow::zoomOut()
+{
+  imageView->scale(0.8, 0.8);
+}
+
+void MainWindow::saveAs()
+{
+  if (currentImage == nullptr) {
+    QMessageBox::information(this, "Information", "Nothing to save.");
+    return;
+  }
+  
+  QFileDialog dialog(this);
+  dialog.setWindowTitle("Save Image As ...");
+  dialog.setFileMode(QFileDialog::AnyFile);
+  dialog.setAcceptMode(QFileDialog::AcceptSave);
+  dialog.setNameFilter(tr("Images (*.png *.bmp *.jpg)"));
+
+  QStringList fileNames;
+  if (dialog.exec()) {
+    fileNames = dialog.selectedFiles();
+    if(QRegExp(".+\\.(png|bmp|jpg)").exactMatch(fileNames.at(0))) {
+      currentImage->pixmap().save(fileNames.at(0));
+    } else {
+      QMessageBox::information(
+			       this,
+			       "Information",
+			       "Save error: bad format or filename.");
+    }
+  }
 }

@@ -8,6 +8,7 @@
 #include <QGraphicsView>
 #include <QStatusBar>
 #include <QLabel>
+#include <QGraphicsPixmapItem>
 
 class MainWindow : public QMainWindow
 {
@@ -19,6 +20,9 @@ public:
 
 private slots:
   void openImage();
+  void zoomIn();
+  void zoomOut();
+  void saveAs();
  
 private:
   void initUI();
@@ -34,6 +38,7 @@ private:
  
   QGraphicsScene *imageScene;
   QGraphicsView *imageView;
+  QGraphicsPixmapItem *currentImage;
  
   QStatusBar *mainStatusBar;
   QLabel *mainStatusLabel;
