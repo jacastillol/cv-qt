@@ -21,10 +21,12 @@ void MainWindow::initUI()
   // setup menubar
   fileMenu = menuBar()->addMenu("&File");
   viewMenu = menuBar()->addMenu("&View");
- 
+  editMenu = menuBar()->addMenu("&Edit");
+
   // setup toolbar
   fileToolBar = addToolBar("File");
   viewToolBar = addToolBar("View");
+  editToolBar = addToolBar("Edit"); 
  
   // main area for image display
   imageScene = new QGraphicsScene(this);
@@ -66,12 +68,16 @@ void MainWindow::createActions()
     nextAction = new QAction("&Next Image", this);
     viewMenu->addAction(nextAction);
 
+    blurAction = new QAction("Blur", this);
+    editMenu->addAction(blurAction);
+
     // add actions to toolbars
     fileToolBar->addAction(openAction);
     viewToolBar->addAction(zoomInAction);
     viewToolBar->addAction(zoomOutAction);
     viewToolBar->addAction(prevAction);
     viewToolBar->addAction(nextAction);
+    editToolBar->addAction(blurAction);    
 
     connect(exitAction, SIGNAL(triggered(bool)),
 	    QApplication::instance(), SLOT(quit()));
@@ -87,6 +93,8 @@ void MainWindow::createActions()
 	    this, SLOT(prevImage()));
     connect(nextAction, SIGNAL(triggered(bool)),
 	    this, SLOT(nextImage()));
+    connect(blurAction, SIGNAL(triggered(bool)),
+	    this, SLOT(blurImage()));
 
     setupShortcuts();
   
@@ -226,4 +234,9 @@ void MainWindow::setupShortcuts()
   shortcuts.clear();
   shortcuts <<Qt::Key_Down <<Qt::Key_Right;
   nextAction->setShortcuts(shortcuts);
+}
+
+void MainWindow::blurImage()
+{
+  qDebug() <<"Blurring the image!";
 }
