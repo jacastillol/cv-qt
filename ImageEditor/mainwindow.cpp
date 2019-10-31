@@ -4,6 +4,8 @@
 #include <QPixmap>
 #include <QMessageBox>
 
+#include "opencv2/opencv.hpp"
+
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -239,4 +241,45 @@ void MainWindow::setupShortcuts()
 void MainWindow::blurImage()
 {
   qDebug() <<"Blurring the image!";
+
+  if (currentImage == nullptr) {
+    QMessageBox::information(this, "Information", "No image to edit.");
+    return;
+  }
+
+  QPixmap pixmap = currentImage->pixmap();
+  QImage image = pixmap.toImage();
+
+  image = image.convertToFormat(QImage::Format_RGB888);
+
+  cv::Mat mat = cv::Mat(
+			image.height(),
+			image.width(),
+			CV_8UC3,
+			image.bits(),
+			image.bytesPerLine());
+  cv::Mat tmp;
+  cv::blur(mat, tmp, cv::Size(8,8));
+
+  mat = tmp;
+
+  QImage image_blurred(
+		       mat.data,
+		       mat.cols,
+		       mat.rows,
+		       mat.step,
+		       QImage::Format_RGB888);
+
+  pixmap = QPixmap::fromImage(image_blurred);
+
+  imageScene->clear();
+  imageView->resetMatrix();
+
+  currentImage = imageScene->addPixmap(pixmap);
+  imageScene->update();
+  imageView->setSceneRect(pixmap.rect());
+
+  QString status = QString("(editted image), %1x%2")
+    .arg(pixmap.width()).arg(pixmap.height());
+  mainStatusLabel->setText(status);
 }
