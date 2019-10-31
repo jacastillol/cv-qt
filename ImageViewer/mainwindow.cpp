@@ -83,6 +83,8 @@ void MainWindow::createActions()
 	    this, SLOT(zoomOut()));
     connect(saveAsAction, SIGNAL(triggered(bool)),
 	    this, SLOT(saveAs()));
+    connect(prevAction, SIGNAL(triggered(bool)),
+	    this, SLOT(prevImage()));
 
 }
 
@@ -116,6 +118,8 @@ void MainWindow::showImage(QString path)
     .arg(image.height()).arg(QFile(path).size());
 
   mainStatusLabel->setText(status);
+
+  currentImagePath = path;
 }
 
 void MainWindow::zoomIn()
@@ -152,5 +156,27 @@ void MainWindow::saveAs()
 			       "Information",
 			       "Save error: bad format or filename.");
     }
+  }
+}
+
+void MainWindow::prevImage()
+{
+  QFileInfo current(currentImagePath);
+  QDir dir = current.absoluteDir();
+
+  QStringList nameFilters;
+  nameFilters <<"*.png" <<"*.bmp" <<"*.jpg";
+
+  QStringList fileNames = dir.entryList(
+					nameFilters,
+					QDir::Files, QDir::Name);
+  int idx = fileNames.indexOf(QRegExp(QRegExp::escape(current.fileName())));
+  if(idx >0) {
+    showImage(dir.absoluteFilePath(fileNames.at(idx - 1)));
+  } else {
+    QMessageBox::information(
+			     this,
+			     "Information",
+			     "Current image is the first one.");
   }
 }

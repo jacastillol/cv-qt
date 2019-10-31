@@ -23,6 +23,7 @@ private slots:
   void zoomIn();
   void zoomOut();
   void saveAs();
+  void prevImage();
  
 private:
   void initUI();
@@ -50,7 +51,8 @@ private:
   QAction *zoomOutAction;
   QAction *prevAction;
   QAction *nextAction;
-  
+
+  QString currentImagePath;
 };
 
 #endif // MAINWINDOW_H
