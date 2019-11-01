@@ -2,6 +2,8 @@
 
 #include <QApplication>
 #include <QGridLayout>
+#include <QCameraInfo>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent),
@@ -74,7 +76,15 @@ void MainWindow::createActions()
 
 void MainWindow::showCameraInfo()
 {
-
+  QList<QCameraInfo>cameras = QCameraInfo::availableCameras();
+  QString info = QString("Available Cameras: \n");
+ 
+  foreach (const QCameraInfo &cameraInfo, cameras) {
+    info += " - " + cameraInfo.deviceName() + ": ";
+    info += cameraInfo.description() + "\n";
+  }
+  
+  QMessageBox::information(this, "Cameras", info);
 }
 
 void MainWindow::openCamera()
