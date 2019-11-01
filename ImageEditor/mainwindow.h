@@ -9,6 +9,10 @@
 #include <QStatusBar>
 #include <QLabel>
 #include <QGraphicsPixmapItem>
+#include <QMap>
+
+#include "editor_plugin_interface.h"
+
 
 class MainWindow : public QMainWindow
 {
@@ -28,12 +32,14 @@ private slots:
   
   void blurImage();
 
- 
+  void pluginPerform();
+
 private:
   void initUI();
   void createActions();
   void showImage(QString);
   void setupShortcuts();
+  void loadPlugins();
  
 private:
   QMenu *fileMenu;
@@ -61,6 +67,8 @@ private:
   QAction *blurAction;
 
   QString currentImagePath;
+
+  QMap<QString, EditorPluginInterface*>editPlugins;
 };
 
 #endif // MAINWINDOW_H

@@ -11,7 +11,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp \
    mainwindow.cpp
 
-HEADERS += mainwindow.h
+HEADERS += mainwindow.h \
+   editor_plugin_interface.h
 
 unix: !mac {
   INCLUDEPATH += /home/jackmaster/programs/opencv/4.1.2/include/opencv4
