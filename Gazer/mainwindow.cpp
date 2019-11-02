@@ -4,12 +4,15 @@
 #include <QGridLayout>
 #include <QCameraInfo>
 #include <QMessageBox>
+#include <QMutex>
 
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent),
-    fileMenu(nullptr)
+    fileMenu(nullptr),
+    capturer(nullptr)
 {
     initUI();
+    data_lock = new QMutex();
 }
 
 MainWindow::~MainWindow()
@@ -89,5 +92,41 @@ void MainWindow::showCameraInfo()
 
 void MainWindow::openCamera()
 {
+  if(capturer != nullptr) {
+    // if a thread is already running, stop it
+    capturer->setRunning(false);
+    disconnect(capturer, &CaptureThread::frameCaptured, this, &MainWindow::updateFrame);
+    connect(capturer, &CaptureThread::finished, capturer, &CaptureThread::deleteLater);
+  }
+
+  int camID = 0;
   
+  capturer = new CaptureThread(camID, data_lock);
+  connect(capturer, &CaptureThread::frameCaptured,
+	  this, &MainWindow::updateFrame);
+
+  capturer->start();
+
+  mainStatusLabel->setText(QString("Capturing Camera %1").arg(camID));
+}
+
+void MainWindow::updateFrame(cv::Mat *mat)
+{
+  data_lock->lock();
+  currentFrame = *mat;
+  data_lock->unlock();
+
+  QImage frame(
+	       currentFrame.data,
+	       currentFrame.cols,
+	       currentFrame.rows,
+	       currentFrame.step,
+	       QImage::Format_RGB888);
+  QPixmap image = QPixmap::fromImage(frame);
+
+  imageScene->clear();
+  imageView->resetMatrix();
+  imageScene->addPixmap(image);
+  imageScene->update();
+  imageView->setSceneRect(image.rect());
 }

@@ -14,6 +14,8 @@
 
 #include "opencv2/opencv.hpp"
 
+#include "capture_thread.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -29,6 +31,7 @@ private:
 private slots:
   void showCameraInfo();
   void openCamera();
+  void updateFrame(cv::Mat*);
   
 private:
     QMenu *fileMenu;
@@ -47,6 +50,12 @@ private:
  
     QStatusBar *mainStatusBar;
     QLabel *mainStatusLabel;
+
+    cv::Mat currentFrame;
+
+    // for capture thread
+    QMutex *data_lock;
+    CaptureThread *capturer;
 
 };
 

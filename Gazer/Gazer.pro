@@ -12,7 +12,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 unix: !mac {
 INCLUDEPATH += /home/jackmaster/programs/opencv/4.1.2/include/opencv4
-LIBS += -L/home/jackmaster/programs/opencv/4.1.2/lib -lopencv_core -lopencv_imgproc -lopencv_video -lopencv_videoio
+LIBS += -L/home/jackmaster/programs/opencv/4.1.2/lib -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lopencv_video -lopencv_videoio
 }
  
 unix: mac {
@@ -27,6 +27,8 @@ win32 {
 
 # Input
 SOURCES += main.cpp \
-   mainwindow.cpp
+  mainwindow.cpp \
+  capture_thread.cpp
 
-HEADERS += mainwindow.h
+HEADERS += mainwindow.h \
+  capture_thread.h
